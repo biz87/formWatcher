@@ -7,18 +7,41 @@ switch ($modx->event->name) {
 
             $from = $modx->getOption('formwatcher_email_from', null, $modx->getOption('emailsender'));
             $to = $modx->getOption('formwatcher_email_to', null, $modx->getOption('emailsender'));
-            $subject = $modx->getOption('formwatcher_subject', null, 'Отчет FormWatcher');
+            $subject = $modx->getOption('formwatcher_email_subject', null, 'Отчет FormWatcher');
             $waiting_time = $modx->getOption('formwatcher_waiting_time', null, '1 day');
             $email_tpl = $modx->getOption('email_tpl', null, 'fw_email_report');
 
             $sendForms = array();
 
-            foreach($formWatcherCache as $key => $form){
-                if($form['timestamp']  < strtotime(' - '.$waiting_time) && !empty($key)){
-                    unset($form['af_action']);
-                    $sendForms[] = $form;
-                    unset($formWatcherCache[$key]);
+            foreach($formWatcherCache as $user_id => $user_actions){
+                $keys = array_keys($user_actions);
+                $firstKey = $keys[0];
+                if(count($user_actions) > 0){
+                    if(is_array($user_actions[$firstKey])){
+                        $forms = $user_actions;
+                        foreach($forms as $form_id => $form){
+                            if(isset($form['timestamp'])){
+                                if($form['timestamp']  < strtotime(' - '.$waiting_time) && !empty($user_id)){
+                                    unset($form['af_action']);
+                                    $sendForms[] = $form;
+                                    unset($formWatcherCache[$user_id][$form_id]);
+                                }
+                            }
+                        }
+                    }else{
+                        $form = $user_actions;
+                        if(isset($form['timestamp'])){
+                            if($form['timestamp']  < strtotime(' - '.$waiting_time) && !empty($user_id)){
+                                unset($form['af_action']);
+                                $sendForms[] = $form;
+                                unset($formWatcherCache[$user_id]);
+                            }
+                        }
+                    }
+                }else{
+                    unset($formWatcherCache[$user_id]);
                 }
+
             }
 
             if(count($sendForms) > 0){
@@ -39,12 +62,13 @@ switch ($modx->event->name) {
                 }else{
                     $modx->mail->reset();
                     unset($formWatcherCache[$key]);
-                    $options = array(
-                        xPDO::OPT_CACHE_KEY => 'formwatcher',
-                    );
-                    $modx->cacheManager->set('formwatcher', $formWatcherCache, 0, $options);
                 }
             }
+
+            $options = array(
+                xPDO::OPT_CACHE_KEY => 'formwatcher',
+            );
+            $modx->cacheManager->set('formwatcher', $formWatcherCache, 0, $options);
 
         }
         break;

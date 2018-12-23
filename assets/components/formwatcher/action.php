@@ -13,24 +13,25 @@ $fields = array();
 foreach($_POST as $key => $value){
     $fields[$key] = trim( filter_input(INPUT_POST,$key,  FILTER_SANITIZE_STRING) );
 }
-$client_id = $fields['client_id'];
-unset($fields['client_id']);
-$fields['timestamp'] = time();
+if(!empty($fields['fw_client_id'])){
+    $client_id = $fields['fw_client_id'];
+    unset($fields['fw_client_id']);
+    $fields['timestamp'] = time();
 
-$formWatcherCache = array();
-if(!$formWatcherCache = $modx->cacheManager->get('formwatcher', array(xPDO::OPT_CACHE_KEY=>'formwatcher'))){
     $formWatcherCache = array();
+    if(!$formWatcherCache = $modx->cacheManager->get('formwatcher', array(xPDO::OPT_CACHE_KEY=>'formwatcher'))){
+        $formWatcherCache = array();
+    }
+
+    if(!empty($fields['fw_form_id'])){
+        $formWatcherCache[$client_id][$fields['fw_form_id']] = $fields;
+    }else{
+        $formWatcherCache[$client_id] = $fields;
+    }
+
+    $options = array(
+        xPDO::OPT_CACHE_KEY => 'formwatcher',
+    );
+    $modx->cacheManager->set('formwatcher', $formWatcherCache, 0, $options);
+
 }
-
-
-$formWatcherCache[$client_id] = $fields;
-$options = array(
-    xPDO::OPT_CACHE_KEY => 'formwatcher',
-);
-$modx->cacheManager->set('formwatcher', $formWatcherCache, 0, $options);
-
-
-$data = array();
-$data['post'] = ($_POST);
-echo json_encode($data);
-die();
