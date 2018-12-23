@@ -3,7 +3,7 @@ $(document).ready(function(){
         var inp = $(this);
         $.ajax({
             type: "POST",
-            url: "/assets/components/smartform/action.php",
+            url: "/assets/components/formwatcher/action.php",
             data: inp.closest('form').serialize(),
             success: function(data) {
                 //console.log(data);
