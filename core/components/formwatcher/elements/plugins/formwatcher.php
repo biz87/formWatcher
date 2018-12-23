@@ -9,14 +9,13 @@ switch ($modx->event->name) {
             $to = $modx->getOption('formwatcher_email_to', null, $modx->getOption('emailsender'));
             $subject = $modx->getOption('formwatcher_subject', null, 'Отчет FormWatcher');
             $waiting_time = $modx->getOption('formwatcher_waiting_time', null, '1 day');
-            $email_tpl = $modx->getOption('email_tpl', null, 'formwatcher.email.tpl');
+            $email_tpl = $modx->getOption('email_tpl', null, 'fw_email_report');
 
 
             foreach($formWatcherCache as $key => $form){
                 if($form['timestamp']  < strtotime(' - '.$waiting_time) ){
 
                     unset($form['af_action']);
-                    unset($form['timestamp']);
 
                     $message = $pdo->getChunk($email_tpl, array('form' => $form));
                     $modx->getService('mail', 'mail.modPHPMailer');
