@@ -13,7 +13,7 @@
 {var $site_url = ('site_url' | option) | preg_replace : '#/$#' : ''}
 {var $assets_url = 'assets_url' | option}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -33,7 +33,7 @@
                             <td>
                                 <h3 style="{$style.h}{$style.h3}">
                                     {block 'title'}
-                                      Отчет FormWatcher
+                                        Отчет о брошенных формах
                                     {/block}
                                 </h3>
 
@@ -41,18 +41,20 @@
                                     <table style="width:90%;margin:auto;">
                                         <tr>
                                             <td>
-                                                {foreach $form as $name => $value}
-                                                    {switch $name}
+                                                {foreach $forms as $form}
+                                                    {foreach $form as $name => $value}
+                                                        {switch $name}
                                                         {case 'af_action'}
-                                                        {*Служебное поле af_action, Пропускаем*}
+                                                            {*Служебное поле af_action, Пропускаем*}
                                                         {case 'timestamp'}
-                                                        {*Метка времени, переводим в удобный вид*}
-                                                        <p><strong>Время заполнения</strong> - {$value | date : 'd.m.Y H:i'}</p>
-                                                        {case $default}
-                                                        {*Сюда попадают все остальные поля*}
-                                                        <p><strong>{$name}</strong> - {$value}</p>
-                                                    {/switch}
-
+                                                            {*Метка времени, переводим в удобный вид*}
+                                                            <p><strong>Время заполнения</strong> - {$value | date : 'd.m.Y H:i'}</p>
+                                                        {case default}
+                                                            {*Сюда попадают все остальные поля*}
+                                                            <p><strong>{$name}</strong> - {$value}</p>
+                                                        {/switch}
+                                                    {/foreach}
+                                                    <hr>
                                                 {/foreach}
                                             </td>
                                         </tr>
