@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'formWatcher' => [
-        'file' => 'formwatcher',
+    'fw_clean' => [
+        'file' => 'fw_clean',
         'description' => 'FormIt hook for remove formData from cache',
         'properties' => [],
     ],

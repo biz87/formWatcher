@@ -11,7 +11,7 @@ return [
     ],
     'email_subject' => [
         'xtype' => 'textfield',
-        'value' => 'Отчет smartForm',
+        'value' => 'Отчет FormWatcher',
         'area' => 'formwatcher_main',
     ],
     'waiting_time' => [
