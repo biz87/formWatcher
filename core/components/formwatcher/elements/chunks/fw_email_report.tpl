@@ -1,13 +1,13 @@
 {var $style = [
-'logo' => 'display:block;margin: auto;',
-'a' => 'color:#348eda;',
-'p' => 'font-family: Arial;color: #666666;font-size: 12px;',
-'h' => 'font-family:Arial;color: #111111;font-weight: 200;line-height: 1.2em;margin: 40px 20px;',
-'h1' => 'font-size: 36px;',
-'h2' => 'font-size: 28px;',
-'h3' => 'font-size: 22px;',
-'th' => 'font-family: Arial;text-align: left;color: #111111;',
-'td' => 'font-family: Arial;text-align: left;color: #111111;',
+    'logo' => 'display:block;margin: auto;',
+    'a' => 'color:#348eda;',
+    'p' => 'font-family: Arial;color: #666666;font-size: 12px;',
+    'h' => 'font-family:Arial;color: #111111;font-weight: 200;line-height: 1.2em;margin: 40px 20px;',
+    'h1' => 'font-size: 36px;',
+    'h2' => 'font-size: 28px;',
+    'h3' => 'font-size: 22px;',
+    'th' => 'font-family: Arial;text-align: left;color: #111111;',
+    'td' => 'font-family: Arial;text-align: left;color: #111111;',
 ]}
 
 {var $site_url = ('site_url' | option) | preg_replace : '#/$#' : ''}
@@ -49,6 +49,9 @@
                                                         {case 'timestamp'}
                                                             {*Метка времени, переводим в удобный вид*}
                                                             <p><strong>Время заполнения</strong> - {$value | date : 'd.m.Y H:i'}</p>
+                                                        {case 'fw_form_id'}
+                                                            {*Идентификатор формы*}
+                                                            <p><strong>Форма</strong> - {$value}</p>
                                                         {case default}
                                                             {*Сюда попадают все остальные поля*}
                                                             <p><strong>{$name}</strong> - {$value}</p>

@@ -13,28 +13,18 @@ switch ($modx->event->name) {
 
             $sendForms = array();
 
-            foreach($formWatcherCache as $user_id => $user_actions){
-                $keys = array_keys($user_actions);
-                $firstKey = $keys[0];
-                if(count($user_actions) > 0){
-                    if(is_array($user_actions[$firstKey])){
-                        $forms = $user_actions;
-                        foreach($forms as $form_id => $form){
-                            if(isset($form['timestamp'])){
-                                if($form['timestamp']  < strtotime(' - '.$waiting_time) && !empty($user_id)){
-                                    unset($form['af_action']);
-                                    $sendForms[] = $form;
-                                    unset($formWatcherCache[$user_id][$form_id]);
-                                }
-                            }
-                        }
-                    }else{
-                        $form = $user_actions;
+            foreach($formWatcherCache as $user_id => $forms){
+                if(count($forms) > 0){
+                    foreach($forms as $form_id => $form){
                         if(isset($form['timestamp'])){
                             if($form['timestamp']  < strtotime(' - '.$waiting_time) && !empty($user_id)){
                                 unset($form['af_action']);
                                 $sendForms[] = $form;
-                                unset($formWatcherCache[$user_id]);
+                                if(count($formWatcherCache[$user_id]) === 1){
+                                    unset($formWatcherCache[$user_id]);
+                                }else{
+                                    unset($formWatcherCache[$user_id][$form_id]);
+                                }
                             }
                         }
                     }
@@ -59,10 +49,8 @@ switch ($modx->event->name) {
                 $modx->mail->setHTML(true);
                 if (!$modx->mail->send()) {
                     $modx->log(modX::LOG_LEVEL_ERROR,'An error occurred while trying to send the email: '.$modx->mail->mailer->ErrorInfo);
-                }else{
-                    $modx->mail->reset();
-                    unset($formWatcherCache[$key]);
                 }
+                $modx->mail->reset();
             }
 
             $options = array(
@@ -71,5 +59,32 @@ switch ($modx->event->name) {
             $modx->cacheManager->set('formwatcher', $formWatcherCache, 0, $options);
 
         }
+        break;
+    case 'OnHandleRequest':
+        // Handle ajax requests
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+        if (empty($_REQUEST['fw_client_id']) || empty($_REQUEST['fw_form_id']) || !$isAjax) {
+            return;
+        }
+
+        $fields = array();
+        foreach($_POST as $key => $value){
+            $fields[$key] = trim( filter_input(INPUT_POST,$key,  FILTER_SANITIZE_STRING) );
+        }
+        $client_id = $fields['fw_client_id'];
+        unset($fields['fw_client_id']);
+        $fields['timestamp'] = time();
+
+        $formWatcherCache = array();
+        if(!$formWatcherCache = $modx->cacheManager->get('formwatcher', array(xPDO::OPT_CACHE_KEY=>'formwatcher'))){
+            $formWatcherCache = array();
+        }
+
+        $formWatcherCache[$client_id][$fields['fw_form_id']] = $fields;
+
+        $options = array(
+            xPDO::OPT_CACHE_KEY => 'formwatcher',
+        );
+        $modx->cacheManager->set('formwatcher', $formWatcherCache, 0, $options);
         break;
 }

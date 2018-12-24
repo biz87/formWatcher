@@ -3,12 +3,8 @@ $(document).ready(function(){
         var inp = $(this);
         $.ajax({
             type: "POST",
-            url: "/assets/components/formwatcher/action.php",
+            url: "/",
             data: inp.closest('form').serialize(),
-            success: function(data) {
-                //console.log(data);
-            },
-            'dataType':'json'
         });
     });
 });
