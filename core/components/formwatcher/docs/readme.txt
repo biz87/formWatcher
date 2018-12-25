@@ -1,7 +1,5 @@
 --------------------
 formWatcher
 --------------------
-Author: John Doe <john@doe.com>
+Author: Nikolay Savin  megawebs.kz
 --------------------
-
-A basic Extra for MODx Revolution.
