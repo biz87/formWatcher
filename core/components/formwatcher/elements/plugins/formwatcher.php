@@ -78,7 +78,7 @@ switch ($modx->event->name) {
         $client_id = $fields['fw_client_id'];
         unset($fields['fw_client_id']);
 
-        if(count($fields) > 0){
+        if(count($fields) > 1){
             $fields['timestamp'] = time();
 
             $formWatcherCache = array();
