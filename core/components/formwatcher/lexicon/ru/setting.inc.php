@@ -16,3 +16,6 @@ $_lang['setting_formwatcher_waiting_time_desc'] = 'Заполнять по ан�
 
 $_lang['setting_formwatcher_email_tpl'] = 'Чанк письма';
 $_lang['setting_formwatcher_email_tpl_desc'] = 'По умолчанию fw_email_report';
+
+$_lang['setting_formwatcher_required_fields'] = 'Обязательные поля';
+$_lang['setting_formwatcher_required_fields_desc'] = 'Отчет формируется только при заполнении указанных полей';

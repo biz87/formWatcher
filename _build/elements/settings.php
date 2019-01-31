@@ -24,4 +24,9 @@ return [
         'value' => '1 day',
         'area' => 'formwatcher_main',
     ],
+    'required_fields' => [
+        'xtype' => 'textfield',
+        'value' => 'fw_form_example:email,phone;',
+        'area' => 'formwatcher_main',
+    ],
 ];

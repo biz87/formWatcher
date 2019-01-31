@@ -75,6 +75,34 @@ switch ($modx->event->name) {
             }
 
         }
+
+        //Проверка на обязательные поля
+        $required_fields_option = $modx->getOption('formwatcher_required_fields');
+        if(!empty($required_fields_option)){
+            $required_fields_arr = explode(';', $required_fields_option);
+            if(count($required_fields_arr) > 0){
+                //fw_form_example:email,phone
+                foreach($required_fields_arr as $required_fields_item){
+                    $required_fields_item_form = explode(':', $required_fields_item);
+                    if(count($required_fields_item_form) == 2){
+                        $form_id = trim($required_fields_item_form[0]);
+                        if($form_id == $_REQUEST['fw_form_id']){
+                            //email,phone
+                            $required_fields = вexplode(',', $required_fields_item_form[1]);
+                            if(count($required_fields > 0)){
+                                foreach($required_fields as $field){
+                                    if(!array_key_exists($field, $fields)){return;}
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+
+
         $client_id = $fields['fw_client_id'];
         unset($fields['fw_client_id']);
 
