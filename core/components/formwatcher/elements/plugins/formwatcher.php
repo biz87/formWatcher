@@ -81,22 +81,22 @@ switch ($modx->event->name) {
         if(!empty($required_fields_option)){
             $required_fields_arr = explode(';', $required_fields_option);
             if(count($required_fields_arr) > 0){
-                //fw_form_example:email,phone
                 foreach($required_fields_arr as $required_fields_item){
-                    $required_fields_item_form = explode(':', $required_fields_item);
-                    if(count($required_fields_item_form) == 2){
-                        $form_id = trim($required_fields_item_form[0]);
-                        if($form_id == $_REQUEST['fw_form_id']){
-                            //email,phone
-                            $required_fields = вexplode(',', $required_fields_item_form[1]);
-                            if(count($required_fields > 0)){
-                                foreach($required_fields as $field){
-                                    if(!array_key_exists($field, $fields)){return;}
+                    if(!empty($required_fields_item)){
+                        $required_fields_item_form = explode(':', $required_fields_item);
+                        if(count($required_fields_item_form) == 2){
+                            $form_id = trim($required_fields_item_form[0]);
+                            if($form_id == $_REQUEST['fw_form_id']){
+                                //email,phone
+                                $required_fields = explode(',', $required_fields_item_form[1]);
+                                if(count($required_fields) > 0){
+                                    foreach($required_fields as $field){
+                                        if(!array_key_exists($field, $fields)){return;}
+                                    }
                                 }
                             }
                         }
                     }
-
                 }
             }
         }
